@@ -7,8 +7,7 @@ parsedConfig = {}
 
 def parseConfig():
     config = configparser.ConfigParser()
-    config.read('config.ini')
-    parsedConfig["Inverter"] = []
+    config.read('config_personal.ini')
     for section in config.sections():
         if ("General" in section):
             parsedConfig["fronius_apiversion"] = config['General']['apiversion']
@@ -38,14 +37,6 @@ def parseConfig():
             parsedConfig["db_port"] = config['Database']['db_port']
 
 
-        else:
-            if ("ipaddress" in config[section]):
-                currentinv = {"ipaddress":config[section]['ipaddress'],
-                              "nickname": config[section]['nickname'],
-                              "cityname": config[section]['cityname']}
-                parsedConfig["Inverter"].append(currentinv)
-
-
 def debug(message):
     # Logging
     if ("write_logs" in parsedConfig and parsedConfig["write_logs"] == "True"):
@@ -56,5 +47,5 @@ def debug(message):
         print(message)
 
 
-debug("Parsing config.ini")
-parseConfig() #Parsing config.ini
+debug("Parsing config_personal.ini")
+parseConfig() #Parsing config_personal.ini

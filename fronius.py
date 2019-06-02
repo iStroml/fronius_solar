@@ -1,9 +1,15 @@
 import configparser
 import datetime
+import smtplib
+import json
+import requests
+import os
+import re
+
+from inverter import Inverter
 
 
 parsedConfig = {}
-
 
 def parseConfig():
     config = configparser.ConfigParser()
@@ -37,6 +43,22 @@ def parseConfig():
             parsedConfig["db_port"] = config['Database']['db_port']
 
 
+def sendMail(from_addr, to_addr_list, cc_addr_list, subject, message, login, password, smtpserver='smtp.gmail.com:587'):
+    debug("Sending Error notification email to "+str(to_addr_list))
+    header = 'From: %s\n' % from_addr
+    header += 'To: %s\n' % ','.join(to_addr_list)
+    header += 'Cc: %s\n' % ','.join(cc_addr_list)
+    header += 'Subject: %s\n\n' % subject
+    message = header + message
+
+    server = smtplib.SMTP(smtpserver)
+    server.starttls()
+    server.login(login, password)
+    problems = server.sendmail(from_addr, to_addr_list, message)
+    server.quit()
+    return problems
+
+
 def debug(message):
     # Logging
     if ("write_logs" in parsedConfig and parsedConfig["write_logs"] == "True"):
@@ -46,6 +68,11 @@ def debug(message):
             f.write(message)
         print(message)
 
+#192.168.188.74
+
 
 debug("Parsing config_personal.ini")
 parseConfig() #Parsing config_personal.ini
+inv = Inverter("INSERTIPADDRESS")
+inv.update()
+print("current production: "+str(inv.getCurrentProduction())+" W")

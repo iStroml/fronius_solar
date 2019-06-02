@@ -6,7 +6,7 @@ import enum
 
 #Creates a new Inverter
 class Inverter:
-    def __init__(self, hostname="fronius", apiversion="1.8.1-9", location=None,nickname=None):
+    def __init__(self, hostname="fronius", apiversion="1.8.1-9", location=None, nickname=None):
         self.hostname = hostname
         self.apiversion = apiversion
         self.location = location
@@ -157,3 +157,12 @@ class Inverter:
                 })
 
             self.SENSOR = enum.Enum('DynamicEnum', local_enum)
+
+    def status(self):
+        print("------------")
+        print("current production: " + str(self.getCurrentProduction()) + " W")
+        print("current self-consumption: " + str(self.getCurrentConsumption()) + " W (" +
+              str(round(self.getCurrentConsumptionPercentage() * 100, 2)) + "%)")
+        print("today production: " + str(self.getTodayProduction()) + " Wh")
+        print("alltime production: " + str(self.getAlltimeProduction() / 1000000) + " MWh")
+        print("errors : " + str(self.getErrors()))

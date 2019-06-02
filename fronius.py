@@ -13,7 +13,7 @@ parsedConfig = {}
 
 def parseConfig():
     config = configparser.ConfigParser()
-    config.read('config_personal.ini')
+    config.read('config/config_personal.ini')
     for section in config.sections():
         if ("General" in section):
             parsedConfig["fronius_apiversion"] = config['General']['apiversion']
@@ -73,6 +73,6 @@ def debug(message):
 
 debug("Parsing config_personal.ini")
 parseConfig() #Parsing config_personal.ini
-inv = Inverter("INSERTIPADDRESS")
+inv = Inverter("YOURINVERTERADDRESS")
 inv.update()
-print("current production: "+str(inv.getCurrentProduction())+" W")
+inv.status()
